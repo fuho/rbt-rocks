@@ -1,0 +1,41 @@
+version: v1beta9
+images:
+  app:
+    image: docker.pkg.github.com/myuser/rbtrocks
+    preferSyncOverRebuild: true
+    injectRestartHelper: true
+    appendDockerfileInstructions:
+    - USER root
+deployments:
+- name: rbt-rocks
+  helm:
+    componentChart: true
+    values:
+      containers:
+      - image: docker.pkg.github.com/myuser/rbtrocks
+      service:
+        ports:
+        - port: 8080
+dev:
+  ports:
+  - imageName: app
+    forward:
+    - port: 8080
+  open:
+  - url: http://localhost:8080
+  sync:
+  - imageName: app
+    excludePaths:
+    - .git/
+    uploadExcludePaths:
+    - Dockerfile
+    - devspace.yaml
+    onUpload:
+      restartContainer: true
+profiles:
+- name: production
+  patches:
+  - op: remove
+    path: images.app.injectRestartHelper
+  - op: remove
+    path: images.app.appendDockerfileInstructions
