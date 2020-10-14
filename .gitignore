@@ -4,6 +4,9 @@ db.sqlite3
 # Ignore DevSpace cache and log folder
 .devspace/
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
 
 
 ##############################################################################
